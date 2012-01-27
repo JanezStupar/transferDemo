@@ -1,0 +1,82 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jquery-autocomplete.css"/>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-autocomplete.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/underscore-min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/backbone-min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/webmaps/webmaps_main.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/gmap3.min.js"></script>
+    <style>
+        *{
+            font-family: verdana;
+            font-size: 12px;
+        }
+        body{
+            text-align:center;
+        }
+        .gmap3{
+            margin: 20px auto;
+            border: 1px dashed #C0C0C0;
+            width: 1000px;
+            height: 500px;
+        }
+        .ui-menu .ui-menu-item{
+            text-align: left;
+            font-weight: normal;
+        }
+        .ui-menu .ui-menu-item a.ui-state-hover{
+            border: 1px solid red;
+            background: #FFBFBF;
+            color: black;
+            font-weight:bold;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+        $(function(){
+
+            $('#test').gmap3();
+
+            $('#address').autocomplete({
+                source: function() {
+                    $("#test").gmap3({
+                        action:'getAddress',
+                        address: $(this).val(),
+                        callback:function(results){
+                            if (!results) return;
+                            $('#address').autocomplete(
+                                    'display',
+                                    results,
+                                    false
+                            );
+                        }
+                    });
+                },
+                cb:{
+                    cast: function(item){
+                        return item.formatted_address;
+                    },
+                    select: function(item) {
+                        $("#test").gmap3(
+                                {action:'clear', name:'marker'},
+                                {action:'addMarker',
+                                    latLng:item.geometry.location,
+                                    map:{center:true}
+                                }
+                        );
+                    }
+                }
+            })
+                    .focus();
+
+        });
+    </script>
+<body>
+<input type="text" id="address" size="60">
+<div id="test" class="gmap3"></div>
+</body>
+</html>

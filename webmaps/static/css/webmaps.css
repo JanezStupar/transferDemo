@@ -1,0 +1,9 @@
+div.my_app {
+    background: none repeat scroll 0 0 white;
+    border: 1px none black;
+    padding: 5px;
+}
+
+div.master_button {
+    margin-left: 5px;
+}
